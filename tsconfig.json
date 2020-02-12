@@ -6,8 +6,8 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "removeComments": true,
-        "declaration": false,
-        "sourceMap": true,
+        "declaration": true,
+        "sourceMap": true,true
         "esModuleInterop": false,
         "jsx": "react",
         "typeRoots": [

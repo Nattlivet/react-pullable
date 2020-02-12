@@ -1,4 +1,4 @@
-# React Pully
+# react-pully
 Simple, customizable React component for pull to refresh on touch devices. Based on [react-pullable](https://github.com/sconstantinides/react-pullable)
 
 ## Installation

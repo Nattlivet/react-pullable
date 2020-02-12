@@ -1,11 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled, { keyframes } from 'styled-components';
+import * as React from 'react';
+// import styled, { keyframes } from 'styled-components';
 
-export class Pully extends React.Component {
+export const Pully = () => {
+    const [] = React.useState({
+        status: 'ready',
+        height: 0
+    });
+
+    const OnTouchStart = () => { };
+    const OnTouchMove = () => { };
+    const OnTouchEnd = () => { };
+
+    React.useEffect(() => {
+        window.addEventListener('touchstart', OnTouchStart);
+        window.addEventListener('touchmove', OnTouchMove, { passive: false });
+        window.addEventListener('touchend', OnTouchEnd);
+
+        return () => {
+            window.removeEventListener('touchstart', OnTouchStart);
+            (window as any).removeEventListener('touchmove', OnTouchMove, { passive: false });
+            window.removeEventListener('touchend', OnTouchEnd);
+        };
+    }, []);
+
+    return null;
+};
+
+/* export class Pully extends React.Component {
     props: any;
     state: any;
-    
+
     constructor(props: any) {
         super(props);
 
@@ -173,26 +197,6 @@ export class Pully extends React.Component {
     disabled: false
 };
 
-Pully.propTypes = {
-    onRefresh: PropTypes.func.isRequired,
-    className: PropTypes.string,
-    centerSpinner: PropTypes.bool,
-    fadeSpinner: PropTypes.bool,
-    rotateSpinner: PropTypes.bool,
-    spinnerSize: PropTypes.number,
-    spinnerOffset: PropTypes.number,
-    spinnerColor: PropTypes.string,
-    spinSpeed: PropTypes.number,
-    popDuration: PropTypes.number,
-    distThreshold: PropTypes.number,
-    resistance: PropTypes.number,
-    refreshDuration: PropTypes.number,
-    resetDuration: PropTypes.number,
-    resetEase: PropTypes.string,
-    shouldPullToRefresh: PropTypes.func,
-    disabled: PropTypes.bool
-};
-
 // Styled Components
 const Container = styled.div.attrs({
     style: props => ({
@@ -246,3 +250,4 @@ const rotate360 = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 `;
+*/

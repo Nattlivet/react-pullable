@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 
-class Pullable extends React.Component {
-    constructor(props) {
+export class Pully extends React.Component {
+    props: any;
+    state: any;
+    
+    constructor(props: any) {
         super(props);
 
         this.clearTouchStatus();
@@ -79,8 +82,11 @@ class Pullable extends React.Component {
 
     refresh = () => {
         this.ignoreTouches = true;
-        this.setState({ status: 'refreshing' }, () => {
-            this.props.onRefresh();
+        this.setState({ status: 'refreshing' }, async () => {
+            const promise = this.props.onRefresh();
+
+            if (promise?.then)
+                await promise.resolve();
 
             this.refreshCompletedTimeout = setTimeout(() => {
                 this.setState({ status: 'refreshCompleted', height: 0 }, () => {
@@ -148,8 +154,8 @@ class Pullable extends React.Component {
     }
 }
 
-Pullable.defaultProps = {
-    className: 'pullable',
+(Pully as any).defaultProps = {
+    className: 'pully',
     centerSpinner: true,
     fadeSpinner: true,
     rotateSpinner: true,
@@ -167,7 +173,7 @@ Pullable.defaultProps = {
     disabled: false
 };
 
-Pullable.propTypes = {
+Pully.propTypes = {
     onRefresh: PropTypes.func.isRequired,
     className: PropTypes.string,
     centerSpinner: PropTypes.bool,
@@ -188,7 +194,6 @@ Pullable.propTypes = {
 };
 
 // Styled Components
-
 const Container = styled.div.attrs({
     style: props => ({
         height: props.height,
@@ -241,5 +246,3 @@ const rotate360 = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 `;
-
-export default Pullable;

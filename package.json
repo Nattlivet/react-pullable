@@ -1,9 +1,10 @@
 {
     "name": "@nattlivet/react-pully",
-    "version": "1.0.3",
-    "description": "Simple, customizable pull to refresh.",
+    "version": "0.1.0",
+    "description": "React pull-to-refresh with promises",
     "main": "lib/index.js",
-    "module": "es/index.js",
+    "build": "rm -rf ./lib && tsc",
+    "prepare": "yarn build",
     "files": [
         "css",
         "es",
@@ -11,8 +12,8 @@
         "umd"
     ],
     "scripts": {
-        "build": "nwb build-react-component",
-        "clean": "nwb clean-module"
+        "build": "rm -rf ./lib && tsc",
+        "prepare": "yarn build"
     },
     "dependencies": {
         "prop-types": "^15.6.1",
@@ -22,9 +23,11 @@
         "react": "16.x"
     },
     "devDependencies": {
-        "nwb": "0.21.x",
+        "@types/react": "^16.9.19",
+        "@types/react-dom": "^16.9.5",
         "react": "^16.3.2",
-        "react-dom": "^16.3.2"
+        "react-dom": "^16.3.2",
+        "typescript": "^3.7.5"
     },
     "author": "Nattlivet AB",
     "license": "MIT",

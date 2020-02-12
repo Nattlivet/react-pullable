@@ -1,15 +1,18 @@
 {
     "compilerOptions": {
         "outDir": "./lib",
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "removeComments": true,
-        "declaration": true,
-        "sourceMap": true,true
-        "esModuleInterop": false,
-        "jsx": "react",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
         "typeRoots": [
             "index.d.ts",
             "node_modules/@types"

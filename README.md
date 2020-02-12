@@ -32,7 +32,7 @@ To prevent Chrome overscroll set `overscroll-behavior-y: contain [or] none;` on 
 | :--- | :--- | :--- | :--- | :--- |
 | onRefresh | true | Function | undefined | Called when a pull is triggered |
 | className | false | String | `pullable` | Class applied to the component |
-| distThreshold | false | Number | `2rem` | Distance where refresh is triggered |
+| distThreshold | false | Number | `72` | Distance where refresh is triggered |
 | resistance | false | Number | `2.5` | How hard it is to pull down |
 | disabled | false | Boolean | false | Disables all functionality |
 

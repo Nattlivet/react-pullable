@@ -1,21 +1,66 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 // import styled, { keyframes } from 'styled-components';
 
 export interface PullyProps {
     className?: string,
+    disabled?: boolean,
 
-    onRefresh: any
+    onRefresh: any,
+    distThreshold?: number,
+    resistance?: number,
 };
 
 const Pully: React.FunctionComponent<PullyProps> = (props) => {
-    const [] = React.useState({
+    const [state, setState] = useState({
         status: 'ready',
         height: 0
     });
+    const [touchStatus, setTouchStatus] = useState({
+        pullStartY: null,
+        pullMoveY: null,
+        dist: 0,
+        distResisted: 0,
+        ignoreTouches: false
+    });
 
-    const OnTouchStart = () => { };
-    const OnTouchMove = () => { };
+    const OnTouchStart = (event) => {
+        if (props.disabled)
+            return;
+
+        if (state.status !== 'ready')
+            return setTouchStatus({ ...touchStatus, pullStartY: null });
+
+        setTouchStatus({ ...touchStatus, pullStartY: event.touches[0].screenY });
+    };
+    const OnTouchMove = (event) => {
+        if (props.disabled || touchStatus.pullStartY === null)
+            return;
+
+        const distance = event.touches[0].screenY - touchStatus.pullStartY;
+        setTouchStatus({
+            ...touchStatus,
+            pullMoveY: event.touches[0].screenY,
+            dist: distance
+        });
+
+        if (distance > 0) {
+            event.preventDefault();
+            const distResisted = Math.min(distance / props.resistance, props.distThreshold);
+
+            setState({ status: 'pulling', height: distResisted });
+            if (distResisted >= props.distThreshold)
+                return Refresh();
+        }
+    };
     const OnTouchEnd = () => { };
+
+    const Refresh = async () => {
+        await props.onRefresh();
+        setState({
+            ...state,
+            status: 'ready'
+        });
+    };
 
     React.useEffect(() => {
         window.addEventListener('touchstart', OnTouchStart);
@@ -38,7 +83,11 @@ const Pully: React.FunctionComponent<PullyProps> = (props) => {
 };
 
 Pully.defaultProps = {
-    className: 'Pully'
+    disabled: false,
+    className: 'Pully',
+
+    distThreshold: 72,
+    resistance: 2.5,
 } as Partial<PullyProps>;
 
 export default Pully;

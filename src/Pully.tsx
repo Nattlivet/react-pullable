@@ -1,7 +1,13 @@
 import * as React from 'react';
 // import styled, { keyframes } from 'styled-components';
 
-export const Pully = () => {
+export interface PullyProps {
+    className?: string,
+
+    onRefresh: any
+};
+
+const Pully: React.FunctionComponent<PullyProps> = (props) => {
     const [] = React.useState({
         status: 'ready',
         height: 0
@@ -23,8 +29,19 @@ export const Pully = () => {
         };
     }, []);
 
-    return null;
+    return (
+        <>
+            <div className={props.className}></div>
+            {props.children}
+        </>
+    );
 };
+
+Pully.defaultProps = {
+    className: 'Pully'
+} as Partial<PullyProps>;
+
+export default Pully;
 
 /* export class Pully extends React.Component {
     props: any;

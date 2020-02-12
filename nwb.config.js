@@ -3,15 +3,10 @@ module.exports = {
   npm: {
     esModules: true,
     umd: {
-      global: 'ReactPullable',
+      global: 'ReactPully',
       externals: {
         react: 'React'
       }
-    }
-  },
-  webpack: {
-    html: {
-      template: 'demo/src/index.html'
     }
   }
 }

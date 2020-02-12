@@ -1,19 +1,30 @@
-# 🙋 React Pullable
+# React Pully
+Simple, customizable React component for pull to refresh on touch devices. Based on [react-pullable](https://github.com/sconstantinides/react-pullable)
 
-Simple, customizable React component for pull to refresh on touch devices.
-
-[Play with the demo](https://sconstantinides.github.io/react-pullable/)
-
-![GIF](screencap.gif)
+## Installation
+``` bash
+$ yarn add @nattlivet/react-pully
+# or
+$ npm add @nattlivet/react-pully
+```
 
 ## Usage
+``` tsx
+import { Pully } from '@nattlivet/react-pully';
 
-Install with `yarn add react-pullable` or `npm install react-pullable`
+const MyComponent = () => {
+    return (
+        <div className="MyComponent">
+            <Pully>
+            </Pully>
+        </div>
+    ):
+}
 
-Import in your components with `import Pullable from 'react-pullable'`
+export default MyComponent;
+```
 
 ### Component styles
-
 To prevent Chrome overscroll set `overscroll-behavior-y: contain [or] none;` on `<body>` ([learn more](https://developers.google.com/web/updates/2017/11/overscroll-behavior)).
 
 ### Required props
@@ -34,7 +45,7 @@ To prevent Chrome overscroll set `overscroll-behavior-y: contain [or] none;` on 
 | spinnerOffset | Number | `0` | Pixel offset of the spinner (from the top) |
 | spinnerColor | String | `#000000` | Color of the spinner |
 | spinSpeed | Number | `1200` | Time to rotate the spinner 360° (in ms) |
-| popDuration | Number | `200` | Time to expand the spinner before it rotates (`0` = skip pop) |
+| popDuration | Number | `200` | Time to expand the spinner before it rotates ( `0` = skip pop) |
 | distThreshold | Number | `spinnerSize * 3` | Distance where refresh is triggered |
 | resistance | Number | `2.5` | How hard it is to pull down |
 | refreshDuration | Number | `1000` | Time spent spinning before resetting (in ms) |
@@ -47,7 +58,7 @@ To prevent Chrome overscroll set `overscroll-behavior-y: contain [or] none;` on 
 
 Using only the required onRefresh prop:
 
-```jsx
+``` jsx
 <Pullable onRefresh={() => this.getData()}>
   {this.state.cards.map(card => <Card data={card}/>)}
 </Pullable>
@@ -61,7 +72,9 @@ Using some optional props:
   centerSpinner={false}
   spinnerColor="#FFFFFF"
   disabled={!currentUser}
+
 >
+
   {this.state.tasks.map(task => <Task data={task}/>)}
 </Pullable>
 ```        
@@ -79,12 +92,13 @@ Built using [NWB](https://github.com/insin/nwb/blob/master/docs/guides/ReactComp
 To test using the included demo app:
 
 1. Clone the repo
-2. Open the directory and run `npm install` and `npm start`
+2. Open the directory and run `npm install` and `npm start` 
 3. The demo app will update to reflect any changes to it or the component
 
 To test in your own local app:
 
 1. Clone the repo
-2. Open the directory and run `npm install` and `npm link`
-3. Open a directory with a test project and run `npm link [package name]`
-4. Back in the react-preload-image directory run `npm run build`
+2. Open the directory and run `npm install` and `npm link` 
+3. Open a directory with a test project and run `npm link [package name]` 
+4. Back in the react-preload-image directory run `npm run build` 
+

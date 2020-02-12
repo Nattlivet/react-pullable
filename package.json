@@ -1,42 +1,42 @@
 {
-  "name": "react-pullable",
-  "version": "1.0.3",
-  "description": "Simple, customizable pull to refresh.",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
-  "scripts": {
-    "build": "nwb build-react-component",
-    "clean": "nwb clean-module && nwb clean-demo",
-    "start": "nwb serve-react-demo",
-    "deploy": "gh-pages -d demo/dist"
-  },
-  "dependencies": {
-    "prop-types": "^15.6.1",
-    "styled-components": "^3.2.6"
-  },
-  "peerDependencies": {
-    "react": "16.x"
-  },
-  "devDependencies": {
-    "gh-pages": "^1.1.0",
-    "nwb": "0.21.x",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
-  },
-  "author": "Stelios Constantinides <sconstantinides@gmail.com>",
-  "license": "MIT",
-  "repository": "https://github.com/sconstantinides/react-pullable",
-  "keywords": [
-    "react",
-    "touch",
-    "pull",
-    "refresh",
-    "reload"
-  ]
+    "name": "@nattlivet/react-pully",
+    "version": "1.0.3",
+    "description": "Simple, customizable pull to refresh.",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "files": [
+        "css",
+        "es",
+        "lib",
+        "umd"
+    ],
+    "scripts": {
+        "build": "nwb build-react-component",
+        "clean": "nwb clean-module"
+    },
+    "dependencies": {
+        "prop-types": "^15.6.1",
+        "styled-components": "^3.2.6"
+    },
+    "peerDependencies": {
+        "react": "16.x"
+    },
+    "devDependencies": {
+        "nwb": "0.21.x",
+        "react": "^16.3.2",
+        "react-dom": "^16.3.2"
+    },
+    "author": "Nattlivet AB",
+    "license": "MIT",
+    "repository": "https://github.com/Nattlivet/react-pully",
+    "keywords": [
+        "react",
+        "touch",
+        "pull",
+        "refresh",
+        "reload",
+        "pully",
+        "react-pully",
+        "react-pullable"
+    ]
 }

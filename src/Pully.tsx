@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-// import styled, { keyframes } from 'styled-components';
+import { useDrag } from 'react-use-gesture'
+
+import './Pully.css';
 
 export interface PullyProps {
     className?: string,
@@ -8,6 +10,7 @@ export interface PullyProps {
     onRefresh: any,
     distThreshold?: number,
     resistance?: number,
+    spinner?: any
 };
 
 const Pully: React.FunctionComponent<PullyProps> = (props) => {
@@ -15,70 +18,32 @@ const Pully: React.FunctionComponent<PullyProps> = (props) => {
         status: 'ready',
         height: 0
     });
-    const [touchStatus, setTouchStatus] = useState({
-        pullStartY: null,
-        pullMoveY: null,
-        dist: 0,
-        distResisted: 0,
-        ignoreTouches: false
-    });
-
-    const OnTouchStart = (event) => {
-        if (props.disabled)
-            return;
-
+    const draggable = useDrag(async ({ down, distance }) => {
         if (state.status !== 'ready')
-            return setTouchStatus({ ...touchStatus, pullStartY: null });
-
-        setTouchStatus({ ...touchStatus, pullStartY: event.touches[0].screenY });
-    };
-    const OnTouchMove = (event) => {
-        if (props.disabled || touchStatus.pullStartY === null)
             return;
 
-        const distance = event.touches[0].screenY - touchStatus.pullStartY;
-        setTouchStatus({
-            ...touchStatus,
-            pullMoveY: event.touches[0].screenY,
-            dist: distance
-        });
+        if (!down || distance < props.distThreshold)
+            return;
 
-        if (distance > 0) {
-            event.preventDefault();
-            const distResisted = Math.min(distance / props.resistance, props.distThreshold);
-
-            setState({ status: 'pulling', height: distResisted });
-            if (distResisted >= props.distThreshold)
-                return Refresh();
-        }
-    };
-    const OnTouchEnd = () => { };
-
-    const Refresh = async () => {
+        setState({ ...state, status: 'refreshing' });
         await props.onRefresh();
-        setState({
-            ...state,
-            status: 'ready'
-        });
-    };
-
-    React.useEffect(() => {
-        window.addEventListener('touchstart', OnTouchStart);
-        window.addEventListener('touchmove', OnTouchMove, { passive: false });
-        window.addEventListener('touchend', OnTouchEnd);
-
-        return () => {
-            window.removeEventListener('touchstart', OnTouchStart);
-            (window as any).removeEventListener('touchmove', OnTouchMove, { passive: false });
-            window.removeEventListener('touchend', OnTouchEnd);
-        };
-    }, []);
+        setState({ ...state, status: 'ready' });
+    })
 
     return (
-        <>
-            <div className={props.className}></div>
-            {props.children}
-        </>
+        <div className="Pully-Wrapper">
+            <div className={props.className} style={{
+                height: state.status !== 'ready' ? '24px' : '0px',
+                marginBottom: state.status !== 'ready' ? '1rem' : '0px',
+                opacity: state.status !== 'ready' ? '1' : '0',
+                animation: state.status !== 'ready' ? 'none' : undefined,
+            }}>
+                {props.spinner}
+            </div>
+            <div className={`${props.className}-Content`} {...draggable()}>
+                {props.children}
+            </div>
+        </div>
     );
 };
 
@@ -88,232 +53,18 @@ Pully.defaultProps = {
 
     distThreshold: 72,
     resistance: 2.5,
+    spinner: (
+        <svg stroke="#dfdfdf" height="24px" width="24px" viewBox="0 0 24 24" strokeWidth="1.5">
+            <line x1="12" y1="2" x2="12" y2="6"></line>
+            <line x1="12" y1="18" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="6" y2="12"></line>
+            <line x1="18" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+        </svg>
+    )
 } as Partial<PullyProps>;
 
 export default Pully;
-
-/* export class Pully extends React.Component {
-    props: any;
-    state: any;
-
-    constructor(props: any) {
-        super(props);
-
-        this.clearTouchStatus();
-
-        this.state = {
-            status: 'ready',
-            height: 0
-        };
-    }
-
-    componentDidMount() {
-        window.addEventListener('touchstart', this.onTouchStart);
-        window.addEventListener('touchmove', this.onTouchMove, { passive: false });
-        window.addEventListener('touchend', this.onTouchEnd);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('touchstart', this.onTouchStart);
-        window.removeEventListener('touchmove', this.onTouchMove, { passive: false });
-        window.removeEventListener('touchend', this.onTouchEnd);
-
-        clearTimeout(this.refreshCompletedTimeout);
-        clearTimeout(this.resetTimeout);
-    }
-
-    clearTouchStatus = () => {
-        this.pullStartY = null;
-        this.pullMoveY = null;
-        this.dist = 0;
-        this.distResisted = 0;
-        this.ignoreTouches = false;
-    };
-
-    onTouchStart = (e) => {
-        if (this.props.disabled || this.ignoreTouches) return;
-
-        if (this.state.status === 'ready' && this.props.shouldPullToRefresh()) {
-            this.pullStartY = e.touches[0].screenY;
-        } else {
-            this.pullStartY = null;
-        }
-    };
-
-    onTouchMove = (e) => {
-        if (this.props.disabled || this.ignoreTouches || this.pullStartY === null) return;
-
-        this.pullMoveY = e.touches[0].screenY;
-        this.dist = this.pullMoveY - this.pullStartY;
-
-        if (this.dist > 0) {
-            e.preventDefault();
-
-            this.distResisted = Math.min(this.dist / this.props.resistance, this.props.distThreshold);
-
-            this.setState({ status: 'pulling', height: this.distResisted }, () => {
-                if (this.distResisted === this.props.distThreshold) this.refresh();
-            });
-        }
-    };
-
-    onTouchEnd = (e) => {
-        if (this.props.disabled || this.ignoreTouches) return;
-
-        if (this.state.status === 'pulling') {
-            this.ignoreTouches = true;
-            this.setState({ status: 'pullAborted', height: 0 }, () => {
-                this.reset(this.props.resetDuration);
-            });
-        } else {
-            this.reset();
-        }
-    };
-
-    refresh = () => {
-        this.ignoreTouches = true;
-        this.setState({ status: 'refreshing' }, async () => {
-            const promise = this.props.onRefresh();
-
-            if (promise?.then)
-                await promise.resolve();
-
-            this.refreshCompletedTimeout = setTimeout(() => {
-                this.setState({ status: 'refreshCompleted', height: 0 }, () => {
-                    this.reset(this.props.resetDuration);
-                });
-            }, this.props.refreshDuration);
-        });
-    };
-
-    reset = (delay = 0) => {
-        this.resetTimeout = setTimeout(() => {
-            this.clearTouchStatus();
-            this.setState({ status: 'ready' });
-        }, delay);
-    };
-
-    render() {
-        const status = this.state.status;
-        const shouldSpin = status === 'refreshing' || status === 'refreshCompleted';
-        const shouldReset = status === 'pullAborted' || status === 'refreshCompleted';
-        const pctPulled = this.state.height / this.props.distThreshold;
-
-        return (
-            <React.Fragment>
-                <Container
-                    className={this.props.className}
-                    height={this.state.height}
-                    centerSpinner={this.props.centerSpinner}
-                    resetDuration={this.props.resetDuration}
-                    resetEase={this.props.resetEase}
-                    shouldReset={shouldReset}
-                >
-                    <Spinner
-                        pctPulled={pctPulled}
-                        fadeSpinner={this.props.fadeSpinner}
-                        rotateSpinner={this.props.rotateSpinner}
-                        spinnerSize={this.props.spinnerSize}
-                        spinnerOffset={this.props.spinnerOffset}
-                        resetDuration={this.props.resetDuration}
-                        resetEase={this.props.resetEase}
-                        shouldReset={shouldReset}
-                        shouldSpin={shouldSpin}
-                    >
-                        <SpinnerSVG
-                            spinnerSize={this.props.spinnerSize}
-                            spinnerColor={this.props.spinnerColor}
-                            popDuration={this.props.popDuration}
-                            spinSpeed={this.props.spinSpeed}
-                            shouldSpin={shouldSpin}
-                        >
-                            <line x1="12" y1="2" x2="12" y2="6"></line>
-                            <line x1="12" y1="18" x2="12" y2="22"></line>
-                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                            <line x1="2" y1="12" x2="6" y2="12"></line>
-                            <line x1="18" y1="12" x2="22" y2="12"></line>
-                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                        </SpinnerSVG>
-                    </Spinner>
-                </Container>
-                {this.props.children}
-            </React.Fragment>
-        );
-    }
-}
-
-(Pully as any).defaultProps = {
-    className: 'pully',
-    centerSpinner: true,
-    fadeSpinner: true,
-    rotateSpinner: true,
-    spinnerSize: 24,
-    spinnerOffset: 0,
-    spinnerColor: '#000000',
-    spinSpeed: 1200,
-    popDuration: 200,
-    distThreshold: 72,
-    resistance: 2.5,
-    refreshDuration: 1000,
-    resetDuration: 400,
-    resetEase: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
-    shouldPullToRefresh: () => window.scrollY <= 0,
-    disabled: false
-};
-
-// Styled Components
-const Container = styled.div.attrs({
-    style: props => ({
-        height: props.height,
-        alignItems: props.centerSpinner ? 'center' : 'flex-start',
-        transition: props.shouldReset ? `height ${props.resetDuration}ms ${props.resetEase}` : 'none'
-    })
-})`
-  display: flex;
-  overflow: hidden;
-  justify-content: center;
-  pointer-events: none;
-`;
-
-const Spinner = styled.div.attrs({
-    style: props => ({
-        opacity: props.fadeSpinner ? props.pctPulled : 1,
-        transform: props.shouldReset
-            ? `translateY(${(props.pctPulled * (props.spinnerSize + props.spinnerOffset)) - props.spinnerSize}px) rotate(${props.rotateSpinner && props.shouldSpin ? 90 : 0}deg)`
-            : `translateY(${(props.pctPulled * (props.spinnerSize + props.spinnerOffset)) - props.spinnerSize}px) rotate(${props.rotateSpinner ? props.pctPulled * 90 : 0}deg)`,
-        transition: props.shouldReset
-            ? `opacity ${props.resetDuration}ms ${props.resetEase}, transform ${props.resetDuration}ms ${props.resetEase}`
-            : 'none'
-    })
-})`
-  transform-origin: center;
-`;
-
-const SpinnerSVG = styled.svg.attrs({
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    strokeWidth: '2',
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-    style: props => ({
-        width: props.spinnerSize,
-        height: props.spinnerSize,
-        stroke: props.spinnerColor,
-        animation: props.shouldSpin
-            ? `${scale} ${props.popDuration}ms cubic-bezier(0.55, 0.055, 0.675, 0.19), ${rotate360} ${props.spinSpeed}ms linear ${props.popDuration}ms infinite`
-            : 'none'
-    })
-})``;
-
-const scale = keyframes`
-  0% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-`;
-
-const rotate360 = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-`;
-*/

@@ -1,21 +1,23 @@
 {
     "name": "@nattlivet/react-pully",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "React pull-to-refresh with promises",
-    "main": "lib/index.js",
-    "build": "rm -rf ./lib && tsc",
+    "main": "dist/index.js",
     "prepare": "yarn build",
+    "private": false,
     "files": [
         "css",
         "es",
         "lib",
-        "umd"
+        "umd",
+        "dist"
     ],
     "scripts": {
-        "build": "rm -rf ./lib && tsc",
+        "build": "rm -rf ./dist && tsc",
         "prepare": "yarn build"
     },
     "dependencies": {
+        "react-use-gesture": "^7.0.4",
         "styled-components": "^3.2.6"
     },
     "peerDependencies": {

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useDrag } from 'react-use-gesture'
 
-import './Pully.css';
-
 export interface PullyProps {
     className?: string,
     disabled?: boolean,

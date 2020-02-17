@@ -14,13 +14,13 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "sourceMap": true,
-        "jsx": "preserve",
+        "jsx": "react",
         "typeRoots": [
             "node_modules/@types"
         ]
     },
     "include": [
-        "src/index.ts"
+        "src"
     ],
     "exclude": [
         "node_modules",

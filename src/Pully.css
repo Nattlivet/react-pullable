@@ -11,13 +11,13 @@
     opacity: 0;
     transition: 150ms ease-in-out;
 
-    animation-name: spin;
+    animation-name: PullySpin;
     animation-duration: 1500ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
 
-@keyframes spin {
+@keyframes PullySpin {
     from {
         transform: rotate(0deg);
     }

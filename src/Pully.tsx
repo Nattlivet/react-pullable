@@ -8,7 +8,8 @@ export interface PullyProps {
     onRefresh: any,
     distThreshold?: number,
     resistance?: number,
-    spinner?: any
+    spinner?: any,
+    timeout?: number,
 };
 
 const Pully: React.FunctionComponent<PullyProps> = (props) => {
@@ -25,7 +26,7 @@ const Pully: React.FunctionComponent<PullyProps> = (props) => {
 
         setState({ ...state, status: 'refreshing' });
         await props.onRefresh();
-        setState({ ...state, status: 'ready' });
+        setTimeout(() => setState({ ...state, status: 'ready' }), props.timeout);
     })
 
     const pulling = state.status !== 'ready';
@@ -54,6 +55,7 @@ Pully.defaultProps = {
 
     distThreshold: 72,
     resistance: 2.5,
+    timeout: 1000,
     spinner: (
         <svg stroke="#dfdfdf" height="24px" width="24px" viewBox="0 0 24 24" strokeWidth="1.5">
             <line x1="12" y1="2" x2="12" y2="6"></line>

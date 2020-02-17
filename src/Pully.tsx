@@ -28,13 +28,16 @@ const Pully: React.FunctionComponent<PullyProps> = (props) => {
         setState({ ...state, status: 'ready' });
     })
 
+    const pulling = state.status !== 'ready';
     return (
-        <div className="Pully-Wrapper">
+        <div className="Pully-Wrapper" style={{
+            overflow: pulling ? 'hidden' : undefined
+        }}>
             <div className={props.className} style={{
-                height: state.status !== 'ready' ? '24px' : '0px',
-                marginBottom: state.status !== 'ready' ? '1rem' : '0px',
-                opacity: state.status !== 'ready' ? '1' : '0',
-                animation: state.status !== 'ready' ? 'none' : undefined,
+                height: pulling ? '24px' : '0px',
+                marginBottom: pulling ? '1rem' : '0px',
+                opacity: pulling ? '1' : '0',
+                animation: pulling ? 'none' : undefined,
             }}>
                 {props.spinner}
             </div>

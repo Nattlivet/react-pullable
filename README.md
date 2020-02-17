@@ -12,10 +12,15 @@ $ npm add @nattlivet/react-pully
 ``` tsx
 import Pully from '@nattlivet/react-pully';
 
+import '@nattlivet/react-pully/dist/Pully.css'
+
 const MyComponent = () => {
     return (
         <div className="MyComponent">
-            <Pully>
+            <Pully onRefresh={() => new Promise(async (resolve) => {
+                await someSlowTask();
+                return resolve();
+            })}>
             </Pully>
         </div>
     ):
@@ -31,7 +36,7 @@ To prevent Chrome overscroll set `overscroll-behavior-y: contain [or] none;` on 
 | Prop | Required | Type | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | onRefresh | true | Function | undefined | Called when a pull is triggered |
-| className | false | String | `pullable` | Class applied to the component |
+| className | false | String | `Pully` | Class applied to the component |
 | distThreshold | false | Number | `72` | Distance where refresh is triggered |
 | resistance | false | Number | `2.5` | How hard it is to pull down |
 | disabled | false | Boolean | false | Disables all functionality |

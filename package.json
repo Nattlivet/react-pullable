@@ -1,6 +1,6 @@
 {
     "name": "@nattlivet/react-pully",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "React pull-to-refresh with promises",
     "main": "dist/index.js",
     "prepare": "yarn build",
